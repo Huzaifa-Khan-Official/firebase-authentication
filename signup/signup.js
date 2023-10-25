@@ -1,9 +1,19 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
 
 import {
-    getAuth, createUserWithEmailAndPassword,
+    getAuth,
+    createUserWithEmailAndPassword,
     onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
+
+import {
+    getFirestore,
+    doc,
+    setDoc,
+    getDocs,
+    collection
+} from "https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js";
+
 
 const firebaseConfig = {
     apiKey: "AIzaSyABpF5Aq3pvwYfqSGd4A1LfyhjgKApnFmE",
@@ -16,18 +26,29 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-let semail = document.querySelector("#semail"); // get email to signin user
-let spassword = document.querySelector("#spassword"); // get password to signin user
 let sbtn = document.querySelector("#sbtn"); // get signin btn
 let errorPara = document.querySelector("#errorPara"); // get error paragraph
 
 
 sbtn.addEventListener("click", () => {
+    let semail = document.querySelector("#semail"); // get email to signin user
+    let spassword = document.querySelector("#spassword"); // get password to signin user
+    let sname = document.querySelector("#sname");  // get name of a user
+    let userData = {
+        sname: sname.value,
+        semail: semail.value,
+        spassword: spassword.value
+    }
     const auth = getAuth();
-    createUserWithEmailAndPassword(auth, semail.value, spassword.value)
-        .then((userCredential) => {
+    createUserWithEmailAndPassword(auth, userData.semail, userData.spassword)
+        .then(async (userCredential) => {
             const user = userCredential.user;
+            await setDoc(doc(db, "users", user.uid), {
+                ...userData,
+                userid: user.uid
+            });
             location.href = "../login/login.html"
         })
         .catch((error) => {
@@ -46,3 +67,14 @@ spassword.addEventListener("keypress", (e) => {
         sbtn.click()
     }
 })
+
+// get all data
+
+// let getAllUsers = async () => {
+//     const querySnapshot = await getDocs(collection(db, "users"));
+//     querySnapshot.forEach((doc) => {
+//         console.log("User Data", doc.data());
+//     });
+// }
+
+// getAllUsers()
