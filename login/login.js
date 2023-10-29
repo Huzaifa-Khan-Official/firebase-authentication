@@ -29,6 +29,7 @@ lbtn.addEventListener("click", () => {
     signInWithEmailAndPassword(auth, lemail.value, lpassword.value)
         .then((userCredential) => {
             const user = userCredential.user;
+            localStorage.setItem("userUid", user.uid)
             location.href = "../index.html"
         })
         .catch((error) => {

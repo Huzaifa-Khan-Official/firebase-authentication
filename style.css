@@ -1,0 +1,50 @@
+body {
+    padding: 0 20px;
+}
+.container {
+    margin: 20px auto;
+    border: .5px solid grey;
+    padding: 20px 0;
+}
+
+.accountTitle {
+    padding: 20px 0;
+    border-bottom: .3px solid grey;
+}
+
+.accountTitle {
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.nameDiv, .emailDiv, .btnsDiv, #errorPara {
+    margin: 20px;
+}
+
+.emailDiv {
+    border-bottom: .5px solid grey;
+}
+
+.updBtn button {
+    background-color: #0171d3 !important;
+}
+
+#errorPara {
+    color: red;
+}
+
+#successPara {
+    color: green;
+}
+
+.btnsDiv {
+    display: flex;
+    justify-content: space-between;
+}
+
+@media (max-width: 380px) {
+    .accountTitle {
+        flex-direction: column;
+    }
+}
