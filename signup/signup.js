@@ -61,7 +61,6 @@ sbtn.addEventListener("click", () => {
                     ...userData, // setting array in a database
                     userid: user.uid   // also user id in the database
                 });
-                localStorage.setItem("userUid", user.uid) // setting user uid to local storage
                 
                 location.href = "../login/login.html"
             })
@@ -87,7 +86,6 @@ spassword.addEventListener("keypress", (e) => {
 onAuthStateChanged(auth, (user) => {
     if (user) {
         const userUid = user.uid;
-        localStorage.setItem("userUid", userUid)
     } else {
         localStorage.removeItem("userUid")
     }

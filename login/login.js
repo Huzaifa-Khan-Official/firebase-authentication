@@ -48,3 +48,7 @@ lpassword.addEventListener("keypress", (e) => {
         lbtn.click()
     }
 })
+
+if (localStorage.getItem("userUid")) {
+    location.href = "../index.html"
+}
