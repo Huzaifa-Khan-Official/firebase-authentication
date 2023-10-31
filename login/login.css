@@ -18,6 +18,10 @@ button {
     background-color: #0171d3 !important;
 }
 
+.form-label span {
+    color: red;
+}
+
 #errorPara {
     color: red;
 }

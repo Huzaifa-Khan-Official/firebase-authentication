@@ -27,15 +27,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 const auth = getAuth();
-const user = auth.currentUser;
 
-
-
-if (user) {
-    localStorage.setItem("userUid", userUid)
-} else {
-    localStorage.removeItem("userUid")
-}
 
 let sbtn = document.querySelector("#sbtn"); // get signin btn
 let errorPara = document.querySelector("#errorPara"); // get error paragraph
@@ -52,13 +44,13 @@ sbtn.addEventListener("click", () => {
             errorPara.innerHTML = "";
         }, 3000);
     } else {
+
         // storing data in a array
         let userData = {
             sname: sname.value,
             semail: semail.value,
             spassword: spassword.value
         }
-        const auth = getAuth();
         // creating user with eamil and password
         createUserWithEmailAndPassword(auth, userData.semail, userData.spassword)
             // email value  , password value
@@ -70,6 +62,7 @@ sbtn.addEventListener("click", () => {
                     userid: user.uid   // also user id in the database
                 });
                 localStorage.setItem("userUid", user.uid) // setting user uid to local storage
+                
                 location.href = "../login/login.html"
             })
             .catch((error) => {
@@ -89,3 +82,17 @@ spassword.addEventListener("keypress", (e) => {
         sbtn.click()
     }
 })
+
+
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        const userUid = user.uid;
+        localStorage.setItem("userUid", userUid)
+    } else {
+        localStorage.removeItem("userUid")
+    }
+});
+
+if (localStorage.getItem("userUid")) {
+    location.href = "../index.html"
+}

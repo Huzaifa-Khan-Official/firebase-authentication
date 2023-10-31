@@ -32,18 +32,31 @@ const auth = getAuth();
 // Initialize Cloud Firestore and get a reference to the service
 const db = getFirestore(app);
 
-// give reference of the User
-const usersRef = doc(db, "users", localStorage.getItem("userUid"));
-// get the details of the user
-const userSnap = await getDoc(usersRef);
-// get user all data
-const usersData = userSnap.data()
+let usersName;
+let usersEmail;
+let usersRef;
 
-const usersName = usersData.sname; // get the user name
-const usersEmail = usersData.semail; // get the user name
+// get usernameDiv
+const usernameDiv = document.querySelector('#uptName');
+// get useremailDiv
+const useremailDiv = document.querySelector('#uptEmail');
 
-onAuthStateChanged(auth, (user) => {
-    if (!user) {
+onAuthStateChanged(auth, async (user) => {
+    if (user) {
+        // give reference of the User
+        usersRef = doc(db, "users", user.uid);
+        // get the details of the user
+        const userSnap = await getDoc(usersRef);
+        // get user all data
+        const usersData = userSnap.data()
+
+        usersName = usersData.sname; // get the user name
+        usersEmail = usersData.semail; // get the user name 
+
+        usernameDiv.value = usersName
+        useremailDiv.value = usersEmail
+    } else {
+        localStorage.removeItem("userUid")
         location.href = "../signup/signup.html";
     }
 });
@@ -56,10 +69,7 @@ logout.addEventListener("click", () => {
     })
 })
 
-// get usernameDiv
-const usernameDiv = document.querySelector('#uptName');
-// get useremailDiv
-const useremailDiv = document.querySelector('#uptEmail');
+
 // get updBtn
 const updBtn = document.querySelector('#updBtn');
 // get errorPara
@@ -70,8 +80,6 @@ const successPara = document.querySelector('#successPara');
 const delBtn = document.querySelector('#delBtn');
 
 
-usernameDiv.value = usersName
-useremailDiv.value = usersEmail
 
 updBtn.addEventListener("click", async () => {
     if (usernameDiv.value == "") {
@@ -86,7 +94,6 @@ updBtn.addEventListener("click", async () => {
         }, 3000);
     } else {
         const upedName = usernameDiv.value;
-        //usersRef
         try {
             await updateDoc(usersRef, {
                 sname: upedName
@@ -109,7 +116,7 @@ updBtn.addEventListener("click", async () => {
 });
 
 
-delBtn.addEventListener("click",async () => {
+delBtn.addEventListener("click", async () => {
     try {
         await deleteDoc(doc(db, "users", localStorage.getItem("userUid"))); // deleted data of user from firestore.          
         deleteUser(auth.currentUser).then(() => {
