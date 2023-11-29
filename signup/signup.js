@@ -60,7 +60,6 @@ sbtn.addEventListener("click", () => {
           ...userData, // setting array in a database
           userid: user.uid, // also user id in the database
         });
-
         location.href = "../login/login.html";
       })
       .catch((error) => {
@@ -86,22 +85,24 @@ const googleSignInBtn = document.getElementById("googleSignInBtn");
 googleSignInBtn.addEventListener("click", () => {
   signInWithPopup(auth, provider)
     .then(async (result) => {
-      // This gives you a Google Access Token. You can use it to access the Google API.
       const credential = GoogleAuthProvider.credentialFromResult(result);
       const token = credential.accessToken;
-      // The signed-in user info.
+
       const user = result.user;
-      console.log(user);
-      // storing data in a array
+
       let userData = {
         sname: user.displayName,
         semail: user.email,
       };
+
       await setDoc(doc(db, "users", user.uid), {
         // collection name,   unique id of user
         ...userData, // setting array in a database
         userid: user.uid, // also user id in the database
       });
+
+      localStorage.setItem("userUid", user.uid);
+
       location.href = "../index.html";
     })
     .catch((error) => {
@@ -111,8 +112,14 @@ googleSignInBtn.addEventListener("click", () => {
       // The email of the user's account used.
       const email = error.customData.email;
       // The AuthCredential type that was used.
-      const credential = GoogleAuthProvider.credentialFromError(error);
-      // ...
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        
+      if (email) {
+        errorPara.innerText = email;
+        setTimeout(() => {
+          errorPara.innerHTML = "";
+        }, 3000);
+      }
     });
 });
 
