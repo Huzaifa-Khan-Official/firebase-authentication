@@ -3,7 +3,8 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebas
 import {
     getAuth,
     onAuthStateChanged,
-    deleteUser
+    deleteUser,
+    GoogleAuthProvider 
 } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
 
 import {
@@ -28,6 +29,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 const auth = getAuth();
+const provider = new GoogleAuthProvider();
 
 // Initialize Cloud Firestore and get a reference to the service
 const db = getFirestore(app);
