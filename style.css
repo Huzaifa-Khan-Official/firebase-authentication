@@ -43,6 +43,43 @@ body {
     justify-content: space-between;
 }
 
+.ProfileImgDiv {
+    text-align: center;
+    margin: 25px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.profileImg {
+    width: 150px;
+    border-radius: 75px;
+}
+
+/* .profileImgBtnDiv {
+    position: absolute;
+    bottom: 0;
+} */
+
+.profileImgBtn {
+    margin-top: 10px;
+    padding: 5px 10px;
+    border: none;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    transition: all .5s;
+}
+
+.profileImgBtn:hover {
+    color: #2c6bd8;
+    border: 1px solid;
+}
+.profileImgBtn p {
+    margin-bottom: 0;
+}
+
 @media (max-width: 380px) {
     .accountTitle {
         flex-direction: column;

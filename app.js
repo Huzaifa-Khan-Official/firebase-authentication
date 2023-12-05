@@ -4,7 +4,7 @@ import {
     getAuth,
     onAuthStateChanged,
     deleteUser,
-    GoogleAuthProvider 
+    GoogleAuthProvider
 } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
 
 import {
@@ -145,5 +145,27 @@ delBtn.addEventListener("click", async () => {
         setTimeout(() => {
             errorPara.innerHTML = "";
         }, 3000);
+    }
+})
+
+const profileImgBtn = document.querySelector(".profileImgBtn");
+
+profileImgBtn.addEventListener("click", () => {
+    const profileImgInput = document.querySelector("#profileImgInput");
+    const file = profileImgInput.files[0];
+    if (file.type.startsWith('image/')) {
+        console.log(file);
+        // profileImgInput.sytle.display = "none"
+        Swal.fire({
+            title: "Good job!",
+            text: "Pictue uploaded successfully!",
+            icon: "success"
+        });
+    } else {
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Please upload an image!"
+        });
     }
 })
