@@ -180,6 +180,7 @@ profileImgLabel.addEventListener('click', () => {
     profileImgInput.click();
 });
 
+
 profileImgInput.addEventListener('change', () => {
     if (profileImgInput.files.length > 0) {
         profileImgBtn.disabled = false;
@@ -237,7 +238,7 @@ profileImgBtn.addEventListener('click', async () => {
 
             profileImg.src = imgUrl;
 
-            profileImgInputDiv.style.display = "none"
+            // profileImgInputDiv.style.display = "none"
 
 
             Swal.fire({
