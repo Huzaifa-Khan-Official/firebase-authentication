@@ -15,6 +15,14 @@ import {
     deleteDoc
 } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js";
 
+import {
+    getStorage,
+    ref,
+    uploadBytesResumable,
+    getDownloadURL
+} from "https://www.gstatic.com/firebasejs/10.5.0/firebase-storage.js";
+
+
 const firebaseConfig = {
     apiKey: "AIzaSyABpF5Aq3pvwYfqSGd4A1LfyhjgKApnFmE",
     authDomain: "test-project-2b.firebaseapp.com",
@@ -33,6 +41,8 @@ const provider = new GoogleAuthProvider();
 
 // Initialize Cloud Firestore and get a reference to the service
 const db = getFirestore(app);
+// Initialize Cloud Storage and get a reference to the service
+const storage = getStorage();
 
 let usersName;
 let usersEmail;
@@ -42,6 +52,8 @@ let usersRef;
 const usernameDiv = document.querySelector('#uptName');
 // get useremailDiv
 const useremailDiv = document.querySelector('#uptEmail');
+const profileImg = document.querySelector('.profileImg');
+let userUid;
 
 onAuthStateChanged(auth, async (user) => {
     if (user) {
@@ -51,6 +63,17 @@ onAuthStateChanged(auth, async (user) => {
         const userSnap = await getDoc(usersRef);
         // get user all data
         const usersData = userSnap.data()
+
+        userUid = user.uid;
+
+        const userRef = doc(db, "users", userUid);
+
+        const docSnap = await getDoc(userRef);
+
+        if (docSnap.exists() && docSnap.data().imgUrl) {
+            const userImgUrl = docSnap.data().imgUrl;
+            profileImg.src = userImgUrl;
+        }
 
         usersName = usersData.sname; // get the user name
         usersEmail = usersData.semail; // get the user name 
@@ -149,23 +172,93 @@ delBtn.addEventListener("click", async () => {
 })
 
 const profileImgBtn = document.querySelector(".profileImgBtn");
+const profileImgInputDiv = document.querySelector(".profileImgInputDiv");
+const profileImgInput = document.querySelector("#profileImgInput");
+const profileImgLabel = document.getElementById('profileImgLabel');
 
-profileImgBtn.addEventListener("click", () => {
-    const profileImgInput = document.querySelector("#profileImgInput");
+profileImgLabel.addEventListener('click', () => {
+    profileImgInput.click();
+});
+
+profileImgInput.addEventListener('change', () => {
+    if (profileImgInput.files.length > 0) {
+        profileImgBtn.disabled = false;
+        profileImgBtn.style.display = "block";
+    }
+});
+
+const downloadImageUrl = (file) => {
+    return new Promise((resolve, reject) => {
+        const profileImagesRef = ref(storage, `images/${file.name}/`);
+        const uploadTask = uploadBytesResumable(profileImagesRef, file);
+
+        uploadTask.on(
+            'state_changed',
+            (snapshot) => {
+                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log('Upload is ' + progress + '% done');
+                switch (snapshot.state) {
+                    case 'paused':
+                        console.log('Upload is paused');
+                        break;
+                    case 'running':
+                        console.log('Upload is running');
+                        break;
+                }
+            },
+            (error) => {
+                reject(error);
+            },
+            () => {
+                getDownloadURL(uploadTask.snapshot.ref)
+                    .then((downloadURL) => {
+                        resolve(downloadURL);
+                    })
+                    .catch((error) => {
+                        reject(error);
+                    });
+            }
+        );
+    });
+};
+
+profileImgBtn.addEventListener('click', async () => {
     const file = profileImgInput.files[0];
+
     if (file.type.startsWith('image/')) {
-        console.log(file);
-        // profileImgInput.sytle.display = "none"
-        Swal.fire({
-            title: "Good job!",
-            text: "Pictue uploaded successfully!",
-            icon: "success"
-        });
+        try {
+            const imgUrl = await downloadImageUrl(file);
+
+            const userRef = doc(db, "users", userUid);
+
+            await updateDoc(userRef, {
+                imgUrl
+            });
+
+            profileImg.src = imgUrl;
+
+            profileImgInputDiv.style.display = "none"
+
+
+            Swal.fire({
+                title: "Good job!",
+                text: "Picture uploaded successfully!",
+                icon: "success"
+            });
+
+        } catch (error) {
+            console.log(error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+            });
+        }
     } else {
         Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "Please upload an image!"
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Please upload an image!',
         });
     }
-})
+});

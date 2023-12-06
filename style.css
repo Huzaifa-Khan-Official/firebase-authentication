@@ -1,6 +1,7 @@
 body {
     padding: 0 20px;
 }
+
 .container {
     margin: 20px auto;
     border: .5px solid grey;
@@ -18,7 +19,10 @@ body {
     justify-content: space-between;
 }
 
-.nameDiv, .emailDiv, .btnsDiv, #errorPara {
+.nameDiv,
+.emailDiv,
+.btnsDiv,
+#errorPara {
     margin: 20px;
 }
 
@@ -50,32 +54,53 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    position: relative;
+}
+
+.profileImgInputDiv {
+    position: absolute;
+    top: 0;
+}
+
+.profileImgInputDiv input {
+    display: none;
+}
+
+.profileImgInputDiv label:hover {
+    cursor: pointer;
+    background-color: #0000004d;
+}
+
+#profileImgLabel {
+    width: 150px;
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    transition: all .5s;
 }
 
 .profileImg {
     width: 150px;
-    border-radius: 75px;
+    border-radius: 50%;
 }
-
-/* .profileImgBtnDiv {
-    position: absolute;
-    bottom: 0;
-} */
 
 .profileImgBtn {
     margin-top: 10px;
     padding: 5px 10px;
     border: none;
     background: transparent;
-    display: flex;
-    align-items: center;
+    display: none;
+    text-align: center;
     transition: all .5s;
 }
 
-.profileImgBtn:hover {
+.profileImgBtn:enabled:hover {
     color: #2c6bd8;
     border: 1px solid;
 }
+
 .profileImgBtn p {
     margin-bottom: 0;
 }

@@ -20,10 +20,12 @@
             </div>
         </div>
         <div class="ProfileImgDiv">
-            <img src="./defaultProfileImg.jpeg" class="profileImg" alt="">
+            <img src="./defaultProfileImg.jpeg" class="profileImg">
+            <div class="profileImgInputDiv">
+                <input type="file" accept="image/*" id="profileImgInput"><label id="profileImgLabel"><i class="fa-solid fa-camera fa-lg"></i></label>
+            </div>
             <div class="profileImgBtnDiv">
-                <input type="file" accept="image/*" id="profileImgInput">
-                <button class="profileImgBtn"><p><i class="fa-solid fa-camera fa-lg"></i> | Upload Image</p></button>
+                <button class="profileImgBtn" disabled><p>Upload Image</p></button>
             </div>
         </div>
 
